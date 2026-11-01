@@ -1,0 +1,125 @@
+import MagicString, { type SourceMap } from 'magic-string';
+
+import type { MemeDictionary } from '../dictionary/meme-dictionary.ts';
+import type { LatinTransliterator } from '../transliteration/latin-transliterator.ts';
+import type { IdentifierScanner, SourceIdentifier } from './identifier-scanner.ts';
+import { NameCollisionError } from './name-collision-error.ts';
+
+export interface TranslationResult {
+  readonly code: string;
+  readonly sourceMap: SourceMap;
+}
+
+interface TranslatorDependencies {
+  readonly identifierScanner: IdentifierScanner;
+  readonly memeDictionary: MemeDictionary;
+  readonly latinTransliterator: LatinTransliterator;
+}
+
+interface TranslationContext {
+  readonly source: string;
+  readonly fileName: string;
+  readonly editor: MagicString;
+  readonly originalNamesByLatinName: Map<string, string>;
+}
+
+export class Translator {
+  private readonly identifierScanner: IdentifierScanner;
+  private readonly memeDictionary: MemeDictionary;
+  private readonly latinTransliterator: LatinTransliterator;
+
+  public constructor({
+    identifierScanner,
+    memeDictionary,
+    latinTransliterator,
+  }: TranslatorDependencies) {
+    this.identifierScanner = identifierScanner;
+    this.memeDictionary = memeDictionary;
+    this.latinTransliterator = latinTransliterator;
+  }
+
+  public translate(source: string, fileName: string): TranslationResult {
+    const context: TranslationContext = {
+      source,
+      fileName,
+      editor: new MagicString(source),
+      originalNamesByLatinName: new Map(),
+    };
+
+    for (const identifier of this.identifierScanner.scan(source)) {
+      this.translateIdentifier(identifier, context);
+    }
+
+    return {
+      code: context.editor.toString(),
+      sourceMap: context.editor.generateMap({
+        source: fileName,
+        includeContent: true,
+        hires: true,
+      }),
+    };
+  }
+
+  private translateIdentifier(identifier: SourceIdentifier, context: TranslationContext): void {
+    const jsWord = identifier.isPrivate
+      ? undefined
+      : this.memeDictionary.findJsWord(identifier.name);
+
+    if (jsWord !== undefined) {
+      this.overwrite(identifier, jsWord, context);
+
+      return;
+    }
+
+    if (this.latinTransliterator.containsCyrillic(identifier.name)) {
+      const latinName = this.toLatinName(identifier);
+
+      this.claimLatinName(latinName, identifier, context);
+      this.overwrite(identifier, latinName, context);
+    }
+  }
+
+  private toLatinName(identifier: SourceIdentifier): string {
+    if (identifier.isPrivate) {
+      return `#${this.latinTransliterator.toLatin(identifier.name.slice(1))}`;
+    }
+
+    return this.latinTransliterator.toLatin(identifier.name);
+  }
+
+  // shortcut: колізії латиниці шукаємо в межах одного файлу, а не між модулями;
+  // посилити, коли зʼявляться пакети з .potuzhno-файлів
+  private claimLatinName(
+    latinName: string,
+    identifier: SourceIdentifier,
+    context: TranslationContext,
+  ): void {
+    const ownerName = context.originalNamesByLatinName.get(latinName);
+
+    if (ownerName !== undefined && ownerName !== identifier.name) {
+      throw new NameCollisionError({
+        firstName: ownerName,
+        secondName: identifier.name,
+        latinName,
+        fileName: context.fileName,
+        line: this.lineNumberAt(context.source, identifier.start),
+      });
+    }
+
+    context.originalNamesByLatinName.set(latinName, identifier.name);
+  }
+
+  private overwrite(
+    identifier: SourceIdentifier,
+    jsName: string,
+    context: TranslationContext,
+  ): void {
+    if (context.source.slice(identifier.start, identifier.end) !== jsName) {
+      context.editor.overwrite(identifier.start, identifier.end, jsName);
+    }
+  }
+
+  private lineNumberAt(source: string, offset: number): number {
+    return source.slice(0, offset).split('\n').length;
+  }
+}

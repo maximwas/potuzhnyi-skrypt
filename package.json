@@ -1,0 +1,39 @@
+{
+  "name": "potuzhno",
+  "version": "0.1.0",
+  "description": "ПотужнийСкрипт — мемна мова програмування поверх JavaScript",
+  "type": "module",
+  "bin": {
+    "potuzhno": "./bin/potuzhno.ts"
+  },
+  "exports": {
+    ".": "./src/container.ts",
+    "./register": "./src/register.ts"
+  },
+  "engines": {
+    "node": ">=26.2"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc",
+    "lint": "eslint .",
+    "format": "prettier --write \"{src,bin,test}/**/*.ts\" \"*.js\"",
+    "format:check": "prettier --check \"{src,bin,test}/**/*.ts\" \"*.js\"",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test"
+  },
+  "dependencies": {
+    "awilix": "13.0.5",
+    "js-tokens": "10.0.0",
+    "kmu-translit": "1.0.0",
+    "magic-string": "1.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@stylistic/eslint-plugin": "5.10.0",
+    "@types/node": "26.6.5",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2"
+  }
+}

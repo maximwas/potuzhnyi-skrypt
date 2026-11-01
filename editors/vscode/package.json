@@ -1,0 +1,56 @@
+{
+  "name": "potuzhno-syntax",
+  "displayName": "ПотужнийСкрипт",
+  "description": "Підсвітка синтаксису ПотужнийСкрипт (*.potuzhno): JavaScript з мемними словами",
+  "version": "0.1.0",
+  "publisher": "maximwas",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "vscode": "^1.144.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "potuzhno",
+        "aliases": [
+          "ПотужнийСкрипт",
+          "potuzhno"
+        ],
+        "extensions": [
+          ".potuzhno"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "potuzhno",
+        "scopeName": "source.potuzhno",
+        "path": "./syntaxes/potuzhno.tmLanguage.json"
+      },
+      {
+        "scopeName": "potuzhno.keywords.injection",
+        "path": "./syntaxes/potuzhno-keywords.injection.json",
+        "injectTo": [
+          "source.potuzhno"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "generate": "node scripts/generate-injection.ts",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "4.0.0",
+    "tm-grammars": "1.32.22",
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.3.2"
+  }
+}

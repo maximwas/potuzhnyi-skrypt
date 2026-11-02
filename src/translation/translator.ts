@@ -23,6 +23,10 @@ interface TranslationContext {
   readonly originalNamesByLatinName: Map<string, string>;
 }
 
+// Ціль словника, що не починається з літери, _ чи $, — символ оператора.
+const OPERATOR_START = /^[^\p{ID_Start}$_]/u;
+const WHITESPACE = /\s/;
+
 export class Translator {
   private readonly identifierScanner: IdentifierScanner;
   private readonly memeDictionary: MemeDictionary;
@@ -66,7 +70,7 @@ export class Translator {
       : this.memeDictionary.findJsWord(identifier.name);
 
     if (jsWord !== undefined) {
-      this.overwrite(identifier, jsWord, context);
+      this.overwrite(identifier, this.padOperator(identifier, jsWord, context.source), context);
 
       return;
     }
@@ -77,6 +81,21 @@ export class Translator {
       this.claimLatinName(latinName, identifier, context);
       this.overwrite(identifier, latinName, context);
     }
+  }
+
+  // Слово-оператор не повинно зліплюватися із сусіднім символом: `відпил-1` інакше став би `--1`,
+  // а `поділити/б` — коментарем `//б`.
+  private padOperator(identifier: SourceIdentifier, jsWord: string, source: string): string {
+    if (OPERATOR_START.test(jsWord) === false) {
+      return jsWord;
+    }
+
+    const before = source.slice(identifier.start - 1, identifier.start);
+    const after = source.slice(identifier.end, identifier.end + 1);
+    const leftPadding = before === '' || WHITESPACE.test(before) ? '' : ' ';
+    const rightPadding = after === '' || WHITESPACE.test(after) ? '' : ' ';
+
+    return `${leftPadding}${jsWord}${rightPadding}`;
   }
 
   private toLatinName(identifier: SourceIdentifier): string {

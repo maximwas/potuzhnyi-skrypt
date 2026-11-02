@@ -1,0 +1,52 @@
+import type { MemeEntry } from '../meme-dictionary.ts';
+
+export const DOM_FORMS_ENTRIES: readonly MemeEntry[] = [
+  // Класи форм
+  ['ПолеДекларації', 'HTMLInputElement'],
+  ['Анкета', 'HTMLFormElement'],
+  ['ПолеВибору', 'HTMLSelectElement'],
+  ['ПолеДляЗвернень', 'HTMLTextAreaElement'],
+  ['ПосиланняНаУгоду', 'HTMLAnchorElement'],
+  ['Світлина', 'HTMLImageElement'],
+  ['Полотно', 'HTMLCanvasElement'],
+
+  // Поля вводу й форми
+  ['підтримано', 'checked'],
+  ['заблоковано', 'disabled'],
+  ['подані_справи', 'files'],
+  ['підказка_суфлера', 'placeholder'],
+  ['тільки_читати', 'readOnly'],
+  ['обовʼязково_до_виконання', 'required'],
+  ['початок_виділення', 'selectionStart'],
+  ['кінець_виділення', 'selectionEnd'],
+  ['виділити_проміжок', 'setSelectionRange'],
+  ['обрати_все', 'select'],
+  ['дійсність_довіреності', 'validity'],
+  ['значення_цифрою', 'valueAsNumber'],
+  ['багато_хто', 'multiple'],
+  ['крок_реформ', 'step'],
+  ['шаблон_реформ', 'pattern'],
+  ['максимум_знаків', 'maxLength'],
+  ['перевірити_довіреність', 'checkValidity'],
+  ['оголосити_довіреність', 'reportValidity'],
+  ['анкета_власника', 'form'],
+  ['учасники_анкети', 'elements'],
+  ['адреса_подання', 'action'],
+  ['подати_документи', 'submit'],
+  ['скинути_анкету', 'reset'],
+  ['запросити_подання', 'requestSubmit'],
+  ['варіанти_бюлетеня', 'options'],
+  ['номер_обраного', 'selectedIndex'],
+  ['обраний', 'selected'],
+  ['рядів_у_залі', 'rows'],
+
+  // Посилання, картинка, canvas
+  ['завантажити_безкоштовно', 'download'],
+  ['джерело_фінансування', 'src'],
+  ['запасний_варіант', 'alt'],
+  ['природна_ширина', 'naturalWidth'],
+  ['природна_висота', 'naturalHeight'],
+  ['дізнатися_контекст', 'getContext'],
+  ['у_дані_посилання', 'toDataURL'],
+  ['у_мішок', 'toBlob'],
+];

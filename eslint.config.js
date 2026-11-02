@@ -13,6 +13,15 @@ export default defineConfig([
   js.configs.recommended,
   tseslint.configs.recommended,
   {
+    // Хост розширень VS Code завантажує main через require
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: { require: 'readonly', module: 'writable' },
+    },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
     plugins: { '@stylistic': stylistic },
     rules: {
       'id-length': ['error', { min: 2 }],

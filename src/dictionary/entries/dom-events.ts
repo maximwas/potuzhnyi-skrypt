@@ -1,0 +1,52 @@
+import type { MemeEntry } from '../meme-dictionary.ts';
+
+export const DOM_EVENTS_ENTRIES: readonly MemeEntry[] = [
+  // Події
+  ['ПодіяРади', 'Event'],
+  ['АдресатПодій', 'EventTarget'],
+  ['ВласнаПодія', 'CustomEvent'],
+  ['підписатися_на_подію', 'addEventListener'],
+  ['відписатися_від_події', 'removeEventListener'],
+  ['розіслати_подію', 'dispatchEvent'],
+  ['заборонити_за_замовчуванням', 'preventDefault'],
+  ['зупинити_спливання', 'stopPropagation'],
+  ['зупинити_негайно', 'stopImmediatePropagation'],
+  ['адресат', 'target'],
+  ['поточний_адресат', 'currentTarget'],
+  ['спливає', 'bubbles'],
+  ['скасовна', 'cancelable'],
+  ['складна', 'composed'],
+  ['шлях_події', 'composedPath'],
+  ['стандартну_дію_заборонено', 'defaultPrevented'],
+  ['фаза_події', 'eventPhase'],
+  ['довірена', 'isTrusted'],
+  ['мітка_часу_події', 'timeStamp'],
+  ['подробиці', 'detail'],
+
+  // Миша й клавіатура
+  ['КлікДепутата', 'MouseEvent'],
+  ['НатискДепутата', 'KeyboardEvent'],
+  ['абсциса_кабінету', 'clientX'],
+  ['ордината_кабінету', 'clientY'],
+  ['абсциса_реєстру', 'pageX'],
+  ['ордината_реєстру', 'pageY'],
+  ['гачок', 'button'],
+  ['клавіша_альт', 'altKey'],
+  ['клавіша_контроль', 'ctrlKey'],
+  ['клавіша_мета', 'metaKey'],
+  ['клавіша_шифт', 'shiftKey'],
+  ['другий_адресат', 'relatedTarget'],
+  ['натиснута_клавіша', 'key'],
+
+  // Спостерігачі й читання файлів
+  ['НаглядачЗмін', 'MutationObserver'],
+  ['НаглядачПерехресть', 'IntersectionObserver'],
+  ['НаглядачРозмірів', 'ResizeObserver'],
+  ['ЧитачСправ', 'FileReader'],
+  ['спостерігати', 'observe'],
+  ['перестати_спостерігати', 'unobserve'],
+  ['відʼєднати', 'disconnect'],
+  ['прочитати_як_текст', 'readAsText'],
+  ['прочитати_як_посилання', 'readAsDataURL'],
+  ['підсумок_читання', 'result'],
+];

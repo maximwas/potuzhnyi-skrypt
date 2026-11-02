@@ -31,6 +31,20 @@ describe('Translator', () => {
     );
   });
 
+  it('замінює слова-оператори на символи, у тому числі всередині ${}', () => {
+    assert.equal(translateToJs('а донат_на_дрони б'), 'a + b');
+    assert.equal(translateToJs('`${а відпил_бюджету б}`'), '`${a - b}`');
+    assert.equal(translateToJs('а залишок_після_розпилу 2'), 'a % 2');
+  });
+
+  it('не зліплює слово-оператор із сусіднім символом', () => {
+    assert.equal(translateToJs('а відпил_бюджету-1'), 'a - -1');
+    assert.equal(translateToJs('а донат_на_дрони+1'), 'a + +1');
+    assert.equal(translateToJs('а відпил_бюджету--б'), 'a - --b');
+    assert.equal(translateToJs('а ділити_по_братськи/* коментар */ б'), 'a / /* коментар */ b');
+    assert.equal(translateToJs('донат_на_дрони донат_на_дрони х'), '+ + kh');
+  });
+
   it('не чіпає англійський JS', () => {
     const source = 'const total = [1, 2].map((item) => item * 2);';
 

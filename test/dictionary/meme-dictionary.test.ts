@@ -3,7 +3,9 @@ import { describe, it } from 'node:test';
 
 import { MemeDictionary, type MemeEntry } from '../../src/dictionary/meme-dictionary.ts';
 import { MEME_ENTRIES } from '../../src/dictionary/meme-entries.ts';
-import { BUILT_IN_HOSTS, JAVASCRIPT_KEYWORD_TARGETS } from '../support/javascript-words.ts';
+import { DOM_NAMES } from '../support/dom-names.ts';
+import { JAVASCRIPT_KEYWORD_TARGETS, OPERATOR_TARGETS } from '../support/javascript-words.ts';
+import { enumerateStandardLibraryNames } from '../support/standard-library-names.ts';
 
 describe('MemeDictionary', () => {
   it('знаходить JS-слово за мемним', () => {
@@ -41,12 +43,32 @@ describe('MemeDictionary', () => {
       }
     });
 
-    it('має для кожного мему існуюче в JS слово', () => {
-      for (const [meme, jsWord] of MEME_ENTRIES) {
-        const isKeyword = JAVASCRIPT_KEYWORD_TARGETS.includes(jsWord);
-        const isBuiltIn = BUILT_IN_HOSTS.some((host) => jsWord in host);
+    it('має для кожного мему існуюче в JS слово: ключове слово, оператор, Node або DOM', () => {
+      const builtInNames = new Set([...enumerateStandardLibraryNames().values()].flat());
 
-        assert.ok(isKeyword || isBuiltIn, `${meme} → ${jsWord}`);
+      const unknown = MEME_ENTRIES.filter(
+        ([, jsWord]) =>
+          !JAVASCRIPT_KEYWORD_TARGETS.includes(jsWord) &&
+          !OPERATOR_TARGETS.includes(jsWord) &&
+          !builtInNames.has(jsWord) &&
+          !DOM_NAMES.has(jsWord),
+      );
+
+      assert.deepEqual(unknown, []);
+    });
+
+    it('дає кожному JS-слову рівно один мем', () => {
+      const memesByJsWord = Map.groupBy(MEME_ENTRIES, ([, jsWord]) => jsWord);
+      const duplicated = [...memesByJsWord]
+        .filter(([, entries]) => entries.length > 1)
+        .map(([jsWord, entries]) => `${jsWord}: ${entries.map(([meme]) => meme).join(', ')}`);
+
+      assert.deepEqual(duplicated, []);
+    });
+
+    it('складається лише з українських літер, цифр, _ і ʼ', () => {
+      for (const [meme] of MEME_ENTRIES) {
+        assert.match(meme, /^[А-ЩЬЮЯЄІЇҐа-щьюяєіїґʼ][А-ЩЬЮЯЄІЇҐа-щьюяєіїґʼ0-9_]*$/u, meme);
       }
     });
   });

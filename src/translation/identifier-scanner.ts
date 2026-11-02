@@ -1,5 +1,7 @@
 import type { Token } from 'js-tokens';
 
+import type { MemeDictionary } from '../dictionary/meme-dictionary.ts';
+
 export type Tokenize = (source: string) => Iterable<Token>;
 
 export interface SourceIdentifier {
@@ -11,6 +13,7 @@ export interface SourceIdentifier {
 
 interface IdentifierScannerDependencies {
   readonly tokenize: Tokenize;
+  readonly memeDictionary: MemeDictionary;
 }
 
 interface PositionedToken {
@@ -22,11 +25,43 @@ interface PositionedToken {
 const CURLY_APOSTROPHE = '’';
 const MODIFIER_APOSTROPHE = 'ʼ';
 
+// JS-слова й оператори, після яких «/» відкриває регулярний вираз, а не ділення
+const WORDS_BEFORE_EXPRESSION = new Set([
+  'await',
+  'case',
+  'delete',
+  'do',
+  'else',
+  'in',
+  'instanceof',
+  'new',
+  'of',
+  'return',
+  'throw',
+  'typeof',
+  'void',
+  'yield',
+  '+',
+  '-',
+  '*',
+  '/',
+  '%',
+]);
+
+const TRIVIA_TOKEN_TYPES = new Set([
+  'WhiteSpace',
+  'LineTerminatorSequence',
+  'SingleLineComment',
+  'MultiLineComment',
+]);
+
 export class IdentifierScanner {
   private readonly tokenize: Tokenize;
+  private readonly memeDictionary: MemeDictionary;
 
-  public constructor({ tokenize }: IdentifierScannerDependencies) {
+  public constructor({ tokenize, memeDictionary }: IdentifierScannerDependencies) {
     this.tokenize = tokenize;
+    this.memeDictionary = memeDictionary;
   }
 
   public *scan(source: string): Generator<SourceIdentifier> {
@@ -58,15 +93,54 @@ export class IdentifierScanner {
   }
 
   private *positionTokens(source: string): Generator<PositionedToken> {
-    let start = 0;
+    let restartOffset: number | undefined = 0;
 
-    for (const token of this.tokenize(source)) {
+    while (restartOffset !== undefined) {
+      restartOffset = yield* this.positionTokensFrom(source, restartOffset);
+    }
+  }
+
+  // Токенізатор вирішує «регулярний вираз чи ділення» за попереднім токеном і знає лише JS-слова:
+  // після мемного `відкат` він бачить звичайне ім'я й читає «/» як ділення. Тому перед «/» після
+  // слова-виразу лексер стартує заново з цього місця, а повертає позицію для наступного запуску.
+  // shortcut: лише слова-вирази й оператори; `щоб (умова) /re/` не виправляємо, бо так ніхто не
+  // пише, а перезапуск усередині `${…}` губить вкладеність шаблону
+  private *positionTokensFrom(
+    source: string,
+    offset: number,
+  ): Generator<PositionedToken, number | undefined> {
+    let start = offset;
+    let previousValue = '';
+    let expressionExpected = false;
+
+    for (const token of this.tokenize(source.slice(offset))) {
+      if (expressionExpected && token.type === 'Punctuator' && token.value.startsWith('/')) {
+        return start;
+      }
+
       const end = start + token.value.length;
 
       yield { token, start, end };
 
+      if (!TRIVIA_TOKEN_TYPES.has(token.type)) {
+        expressionExpected = this.expectsExpressionAfter(token, previousValue);
+        previousValue = token.value;
+      }
+
       start = end;
     }
+
+    return undefined;
+  }
+
+  private expectsExpressionAfter(token: Token, previousValue: string): boolean {
+    if (token.type !== 'IdentifierName' || previousValue === '.' || previousValue === '?.') {
+      return false;
+    }
+
+    const jsWord = this.memeDictionary.findJsWord(token.value.normalize('NFC'));
+
+    return jsWord !== undefined && WORDS_BEFORE_EXPRESSION.has(jsWord);
   }
 
   // «ім’я» з U+2019 токенізатор бачить як «ім», «’», «я»; у JS-імені дозволений лише ʼ (U+02BC)

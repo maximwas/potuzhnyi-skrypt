@@ -13,6 +13,8 @@
   "categories": [
     "Programming Languages"
   ],
+  "icon": "icons/potuzhno.png",
+  "main": "./extension.cjs",
   "contributes": {
     "languages": [
       {
@@ -24,7 +26,11 @@
         "extensions": [
           ".potuzhno"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/potuzhno.svg",
+          "dark": "./icons/potuzhno.svg"
+        }
       }
     ],
     "grammars": [
@@ -40,10 +46,18 @@
           "source.potuzhno"
         ]
       }
-    ]
+    ],
+    "configurationDefaults": {
+      "[potuzhno]": {
+        "editor.unicodeHighlight.ambiguousCharacters": false
+      },
+      "cSpell.enabledFileTypes": {
+        "potuzhno": false
+      }
+    }
   },
   "scripts": {
-    "generate": "node scripts/generate-injection.ts",
+    "generate": "node scripts/generate.ts",
     "test": "node --test \"test/**/*.test.ts\"",
     "package": "vsce package --no-dependencies"
   },

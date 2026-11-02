@@ -50,23 +50,5 @@ export const JAVASCRIPT_KEYWORD_TARGETS: readonly string[] = [
   'globalThis',
 ];
 
-export const BUILT_IN_HOSTS: readonly object[] = [
-  globalThis,
-  Array,
-  Array.prototype,
-  String.prototype,
-  Object,
-  Map.prototype,
-  Set.prototype,
-  Promise,
-  Promise.prototype,
-  Math,
-  JSON,
-  console,
-  Number,
-  Number.prototype,
-  Date,
-  RegExp.prototype,
-  Error.prototype,
-  new Error(),
-];
+// Цілі-оператори: словникове слово замінюється на символ.
+export const OPERATOR_TARGETS: readonly string[] = ['+', '-', '*', '/', '%'];

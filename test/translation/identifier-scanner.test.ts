@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { createPotuzhnoContainer } from '../../src/container.ts';
+import { MEME_ENTRIES } from '../../src/dictionary/meme-entries.ts';
 
 const { identifierScanner } = createPotuzhnoContainer().cradle;
 
@@ -37,5 +38,23 @@ describe('IdentifierScanner', () => {
     const identifiers = [...identifierScanner.scan(source)];
 
     assert.equal(source.slice(identifiers[1].start, identifiers[1].end), 'ім’я');
+  });
+
+  it('читає «/» після мемного return чи typeof як початок регулярного виразу', () => {
+    assert.deepEqual(scanNames('відкат /потужно/g.test(х)'), ['відкат', 'test', 'х']);
+    assert.deepEqual(scanNames('відкат /"/.test(х) + "рядок"'), ['відкат', 'test', 'х']);
+    assert.deepEqual(scanNames('анкета /* прапор */ /потужно/'), ['анкета']);
+  });
+
+  it('читає «/» після слова-оператора як початок регулярного виразу', () => {
+    const [plusWord] = MEME_ENTRIES.find(([, jsWord]) => jsWord === '+') ?? [];
+
+    assert.ok(plusWord);
+    assert.deepEqual(scanNames(`${plusWord} /потужно/.test(х)`), [plusWord, 'test', 'х']);
+  });
+
+  it('читає «/» після звичайного імені чи властивості як ділення', () => {
+    assert.deepEqual(scanNames('а / б / в'), ['а', 'б', 'в']);
+    assert.deepEqual(scanNames('х.відкат / б / в'), ['х', 'відкат', 'б', 'в']);
   });
 });

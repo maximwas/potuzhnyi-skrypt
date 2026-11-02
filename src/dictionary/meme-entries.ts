@@ -1,182 +1,57 @@
 import type { MemeEntry } from './meme-dictionary.ts';
+import { KEYWORDS_ENTRIES } from './entries/keywords.ts';
+import { ERRORS_ENTRIES } from './entries/errors.ts';
+import { VALUES_ENTRIES } from './entries/values.ts';
+import { CONSOLE_ENTRIES } from './entries/console.ts';
+import { MATH_ENTRIES } from './entries/math.ts';
+import { JSON_ENTRIES } from './entries/json.ts';
+import { OBJECT_ENTRIES } from './entries/object.ts';
+import { ARRAY_ENTRIES } from './entries/array.ts';
+import { STRING_ENTRIES } from './entries/string.ts';
+import { NUMBER_ENTRIES } from './entries/number.ts';
+import { COLLECTIONS_ENTRIES } from './entries/collections.ts';
+import { PROMISE_ENTRIES } from './entries/promise.ts';
+import { DATE_AND_TIMERS_ENTRIES } from './entries/date-and-timers.ts';
+import { NETWORK_ENTRIES } from './entries/network.ts';
+import { OPERATORS_ENTRIES } from './entries/operators.ts';
+import { FUNCTION_ENTRIES } from './entries/function.ts';
+import { SYMBOL_ENTRIES } from './entries/symbol.ts';
+import { REGEXP_ENTRIES } from './entries/regexp.ts';
+import { REFLECT_AND_PROXY_ENTRIES } from './entries/reflect-and-proxy.ts';
+import { TYPED_ARRAYS_ENTRIES } from './entries/typed-arrays.ts';
+import { ITERATORS_ENTRIES } from './entries/iterators.ts';
+import { DOM_EVENTS_ENTRIES } from './entries/dom-events.ts';
+import { DOM_NODES_ENTRIES } from './entries/dom-nodes.ts';
+import { DOM_STYLE_ENTRIES } from './entries/dom-style.ts';
+import { DOM_FORMS_ENTRIES } from './entries/dom-forms.ts';
+import { DOM_WINDOW_ENTRIES } from './entries/dom-window.ts';
 
 // Мемне слово → JS-слово, один токен на один. Пояснення мемів і джерела — docs/research.md.
 export const MEME_ENTRIES: readonly MemeEntry[] = [
-  // Оголошення, функції, класи
-  ['потужно', 'let'],
-  ['батон', 'const'],
-  ['совок', 'var'],
-  ['схема', 'function'],
-  ['відкат', 'return'],
-  ['партія', 'class'],
-  ['кум', 'extends'],
-  ['папєрєднікі', 'super'],
-  ['будівництво', 'constructor'],
-  ['я_тут', 'this'],
-  ['по_новому', 'new'],
-  ['довічно', 'static'],
-  ['взяти', 'get'],
-  ['занести', 'set'],
-
-  // Умови й цикли
-  ['щоб', 'if'],
-  ['хто_не_чув', 'else'],
-  ['вибори', 'switch'],
-  ['кандидат', 'case'],
-  ['тво', 'default'],
-  ['каденція', 'for'],
-  ['серед', 'of'],
-  ['в', 'in'],
-  ['ато', 'while'],
-  ['обіцяю', 'do'],
-  ['астанавітесь', 'break'],
-  ['не_відступай', 'continue'],
-
-  // Винятки
-  ['пронесе', 'try'],
-  ['набу', 'catch'],
-  ['застава', 'finally'],
-  ['вирок', 'throw'],
-  ['Ганьба', 'Error'],
-  ['Азірівка', 'SyntaxError'],
-  ['Ахмєтова', 'TypeError'],
-  ['Перевищення', 'RangeError'],
-  ['МертваДуша', 'ReferenceError'],
-  ['формулювання', 'message'],
-  ['матеріали_справи', 'stack'],
-
-  // Асинхронність, модулі, оператори
-  ['завтрашній', 'async'],
-  ['два_три_тижні', 'await'],
-  ['виплата', 'yield'],
-  ['завезти', 'import'],
-  ['вивезти', 'export'],
-  ['з', 'from'],
-  ['як', 'as'],
-  ['анкета', 'typeof'],
-  ['великий_український', 'instanceof'],
-  ['люстрація', 'delete'],
-  ['порожнеча', 'void'],
-  ['плівки', 'debugger'],
-
-  // Значення
-  ['перемога', 'true'],
-  ['зрада', 'false'],
-  ['страус', 'null'],
-  ['ростов', 'undefined'],
-  ['проффесор', 'NaN'],
-  ['тарифи', 'Infinity'],
-  ['держава', 'globalThis'],
-
-  // ОП = console
-  ['ОП', 'console'],
-  ['звернення', 'log'],
-  ['ганьба', 'error'],
-  ['шашлики', 'warn'],
-  ['брифінг', 'info'],
-  ['кошторис', 'table'],
-  ['перезавантаження', 'clear'],
-
-  // Бюджет = Math
-  ['Бюджет', 'Math'],
-  ['дно', 'floor'],
-  ['стеля', 'ceil'],
-  ['округлити', 'round'],
-  ['прогноз', 'random'],
-  ['яйця_по_17', 'max'],
-  ['пенсія', 'min'],
-  ['модуль', 'abs'],
-  ['степінь', 'pow'],
-  ['корінь', 'sqrt'],
-  ['урізати', 'trunc'],
-  ['ПІ', 'PI'],
-
-  // Декларація = JSON, Майно = Object
-  ['Декларація', 'JSON'],
-  ['оприлюднити', 'stringify'],
-  ['розібрати', 'parse'],
-  ['Майно', 'Object'],
-  ['ключі', 'keys'],
-  ['статки', 'values'],
-  ['активи', 'entries'],
-  ['переписати_на_тещу', 'assign'],
-  ['арешт', 'freeze'],
-  ['легалізувати', 'fromEntries'],
-  ['прокладка', 'create'],
-  ['оформлено_на_себе', 'hasOwn'],
-
-  // Рада = Array
-  ['Рада', 'Array'],
-  ['легітимна', 'isArray'],
-  ['розпил', 'map'],
-  ['конкурс', 'filter'],
-  ['кровосісі', 'reduce'],
-  ['кожному_по_тисячі', 'forEach'],
-  ['знайти_винних', 'find'],
-  ['номер_винного', 'findIndex'],
-  ['мало_хто', 'some'],
-  ['не_тільки_лише_всі', 'every'],
-  ['причетний', 'includes'],
-  ['місце_у_списку', 'indexOf'],
-  ['садити', 'push'],
-  ['втеча', 'pop'],
-  ['відставка', 'shift'],
-  ['призначити', 'unshift'],
-  ['шматок', 'slice'],
-  ['на_вила', 'splice'],
-  ['рейтинг', 'sort'],
-  ['картонка', 'reverse'],
-  ['коаліція', 'concat'],
-  ['коса', 'join'],
-  ['плоска_шкала', 'flat'],
-  ['наповнити', 'fill'],
-  ['скільки', 'length'],
-
-  // Мова = String, Віра = Boolean, Гривня = Number
-  ['Мова', 'String'],
-  ['Віра', 'Boolean'],
-  ['Гривня', 'Number'],
-  ['розкол', 'split'],
-  ['очистити', 'trim'],
-  ['майдан', 'toUpperCase'],
-  ['кулуари', 'toLowerCase'],
-  ['відмити', 'replace'],
-  ['відмити_все', 'replaceAll'],
-  ['накрутити', 'padStart'],
-  ['накрутити_в_кінці', 'padEnd'],
-  ['другий_термін', 'repeat'],
-  ['договорняк', 'match'],
-  ['експертиза', 'test'],
-  ['озвучити', 'toString'],
-  ['зафіксувати', 'toFixed'],
-  ['порахувати', 'parseInt'],
-  ['порахувати_з_копійками', 'parseFloat'],
-  ['чи_проффесор', 'isNaN'],
-
-  // Сімʼя = Map, Фракція = Set
-  ['Сімʼя', 'Map'],
-  ['Фракція', 'Set'],
-  ['в_команду', 'add'],
-  ['в_темі', 'has'],
-  ['склад', 'size'],
-
-  // Обіцянка = Promise
-  ['Обіцянка', 'Promise'],
-  ['після_виборів', 'then'],
-  ['виконано', 'resolve'],
-  ['провалено', 'reject'],
-  ['єдині', 'all'],
-  ['перегони', 'race'],
-  ['порішали', 'allSettled'],
-  ['хоч_одна', 'any'],
-
-  // Час, мережа, інше
-  ['Календар', 'Date'],
-  ['вже_сьогодні', 'now'],
-  ['весна_прийде', 'setTimeout'],
-  ['перенести_весну', 'clearTimeout'],
-  ['телемарафон', 'setInterval'],
-  ['вимкнути_марафон', 'clearInterval'],
-  ['транш', 'fetch'],
-  ['двійник', 'structuredClone'],
+  ...KEYWORDS_ENTRIES,
+  ...ERRORS_ENTRIES,
+  ...VALUES_ENTRIES,
+  ...CONSOLE_ENTRIES,
+  ...MATH_ENTRIES,
+  ...JSON_ENTRIES,
+  ...OBJECT_ENTRIES,
+  ...ARRAY_ENTRIES,
+  ...STRING_ENTRIES,
+  ...NUMBER_ENTRIES,
+  ...COLLECTIONS_ENTRIES,
+  ...PROMISE_ENTRIES,
+  ...DATE_AND_TIMERS_ENTRIES,
+  ...NETWORK_ENTRIES,
+  ...OPERATORS_ENTRIES,
+  ...FUNCTION_ENTRIES,
+  ...SYMBOL_ENTRIES,
+  ...REGEXP_ENTRIES,
+  ...REFLECT_AND_PROXY_ENTRIES,
+  ...TYPED_ARRAYS_ENTRIES,
+  ...ITERATORS_ENTRIES,
+  ...DOM_EVENTS_ENTRIES,
+  ...DOM_NODES_ENTRIES,
+  ...DOM_STYLE_ENTRIES,
+  ...DOM_FORMS_ENTRIES,
+  ...DOM_WINDOW_ENTRIES,
 ];

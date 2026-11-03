@@ -2,3 +2,4 @@ node_modules/
 .DS_Store
 *.vsix
 editors/vscode/dist/
+dist/

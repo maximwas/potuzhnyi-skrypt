@@ -4,11 +4,17 @@
   "description": "ПотужнийСкрипт — мемна мова програмування поверх JavaScript",
   "type": "module",
   "bin": {
-    "potuzhno": "./bin/potuzhno.ts"
+    "potuzhno": "./dist/bin/potuzhno.js"
   },
   "exports": {
-    ".": "./src/container.ts",
-    "./register": "./src/register.ts"
+    ".": {
+      "types": "./dist/src/container.d.ts",
+      "default": "./dist/src/container.js"
+    },
+    "./register": {
+      "types": "./dist/src/register.d.ts",
+      "default": "./dist/src/register.js"
+    }
   },
   "engines": {
     "node": ">=26.2"
@@ -19,7 +25,9 @@
     "lint": "eslint .",
     "format": "prettier --write \"{src,bin,test}/**/*.ts\" \"*.js\"",
     "format:check": "prettier --check \"{src,bin,test}/**/*.ts\" \"*.js\"",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run check && npm run build"
   },
   "dependencies": {
     "awilix": "13.0.5",
@@ -35,5 +43,26 @@
     "prettier": "3.9.10",
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.2"
+  },
+  "files": [
+    "dist/bin",
+    "dist/src",
+    "README.md"
+  ],
+  "keywords": [
+    "potuzhno",
+    "javascript",
+    "esoteric",
+    "meme",
+    "ukrainian",
+    "language",
+    "transpiler"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximwas/potuzhnyi-skrypt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maximwas/potuzhnyi-skrypt/issues"
   }
 }

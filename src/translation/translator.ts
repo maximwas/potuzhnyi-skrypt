@@ -5,9 +5,18 @@ import type { LatinTransliterator } from '../transliteration/latin-transliterato
 import type { IdentifierScanner, SourceIdentifier } from './identifier-scanner.ts';
 import { NameCollisionError } from './name-collision-error.ts';
 
+// Одна заміна в тексті: діапазон у вихідному коді, що саме було й що стало.
+export interface Replacement {
+  readonly start: number;
+  readonly end: number;
+  readonly original: string;
+  readonly replacement: string;
+}
+
 export interface TranslationResult {
   readonly code: string;
   readonly sourceMap: SourceMap;
+  readonly replacements: readonly Replacement[];
 }
 
 interface TranslatorDependencies {
@@ -21,6 +30,7 @@ interface TranslationContext {
   readonly fileName: string;
   readonly editor: MagicString;
   readonly originalNamesByLatinName: Map<string, string>;
+  readonly replacements: Replacement[];
 }
 
 // Ціль словника, що не починається з літери, _ чи $, — символ оператора.
@@ -48,6 +58,7 @@ export class Translator {
       fileName,
       editor: new MagicString(source),
       originalNamesByLatinName: new Map(),
+      replacements: [],
     };
 
     for (const identifier of this.identifierScanner.scan(source)) {
@@ -61,6 +72,7 @@ export class Translator {
         includeContent: true,
         hires: true,
       }),
+      replacements: context.replacements,
     };
   }
 
@@ -135,6 +147,13 @@ export class Translator {
   ): void {
     if (context.source.slice(identifier.start, identifier.end) !== jsName) {
       context.editor.overwrite(identifier.start, identifier.end, jsName);
+
+      context.replacements.push({
+        start: identifier.start,
+        end: identifier.end,
+        original: context.source.slice(identifier.start, identifier.end),
+        replacement: jsName,
+      });
     }
   }
 

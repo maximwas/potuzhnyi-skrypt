@@ -46,8 +46,6 @@ CommandLine → ScriptRunner → ModuleLoader → Translator → IdentifierScann
 Власні імена в `.potuzhno` (змінні, функції, класи) перекладач переписує латиницею: `Депутат` → `Deputat`, `імʼя` → `imia`.
 У словнику апостроф пишемо як `ʼ` (U+02BC): звичайний `'` у JS відкриває рядок.
 
-Деталі підходу, словник і джерела мемів — [docs/research.md](docs/research.md).
-
 ## Підсвітка у VS Code
 
 ```sh

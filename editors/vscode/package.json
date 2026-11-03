@@ -58,11 +58,14 @@
   },
   "scripts": {
     "generate": "node scripts/generate.ts",
+    "build": "esbuild src/create-hover-info-service.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/hover-info-service.cjs",
     "test": "node --test \"test/**/*.test.ts\"",
+    "vscode:prepublish": "npm run build",
     "package": "vsce package --no-dependencies"
   },
   "devDependencies": {
     "@vscode/vsce": "4.0.0",
+    "esbuild": "0.28.2",
     "tm-grammars": "1.32.22",
     "vscode-oniguruma": "2.0.1",
     "vscode-textmate": "9.3.2"

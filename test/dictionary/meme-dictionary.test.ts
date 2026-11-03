@@ -21,6 +21,13 @@ describe('MemeDictionary', () => {
     assert.equal(dictionary.findJsWord('ганьба'), undefined);
   });
 
+  it('знаходить мемне слово за JS-словом', () => {
+    const dictionary = new MemeDictionary({ memeEntries: [['потужно', 'let']] });
+
+    assert.equal(dictionary.findMeme('let'), 'потужно');
+    assert.equal(dictionary.findMeme('var'), undefined);
+  });
+
   it('відхиляє мемне слово, яке повторюється', () => {
     const duplicatedEntries: MemeEntry[] = [
       ['потужно', 'let'],

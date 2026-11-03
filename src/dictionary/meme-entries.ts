@@ -26,7 +26,7 @@ import { DOM_STYLE_ENTRIES } from './entries/dom-style.ts';
 import { DOM_FORMS_ENTRIES } from './entries/dom-forms.ts';
 import { DOM_WINDOW_ENTRIES } from './entries/dom-window.ts';
 
-// Мемне слово → JS-слово, один токен на один. Пояснення мемів і джерела — docs/research.md.
+// Мемне слово → JS-слово, один токен на один.
 export const MEME_ENTRIES: readonly MemeEntry[] = [
   ...KEYWORDS_ENTRIES,
   ...ERRORS_ENTRIES,

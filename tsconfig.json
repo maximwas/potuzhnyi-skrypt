@@ -17,6 +17,7 @@
     "bin",
     "test",
     "editors/vscode/scripts",
+    "editors/vscode/src",
     "editors/vscode/test"
   ]
 }

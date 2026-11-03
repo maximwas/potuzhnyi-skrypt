@@ -9,6 +9,8 @@ export default defineConfig([
     'graphify-out/',
     'editors/vscode/node_modules/',
     'editors/vscode/syntaxes/',
+    'editors/vscode/dist/',
+    'site/',
   ]),
   js.configs.recommended,
   tseslint.configs.recommended,

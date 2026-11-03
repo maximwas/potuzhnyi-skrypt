@@ -15,6 +15,15 @@ describe('Translator', () => {
     assert.equal(translateToJs('потужно х = 1;'), 'let kh = 1;');
   });
 
+  it('повертає список замін із діапазонами у вихідному коді', () => {
+    const { replacements } = translator.translate('потужно х = 1;', 'test.potuzhno');
+
+    assert.deepEqual(replacements, [
+      { start: 0, end: 7, original: 'потужно', replacement: 'let' },
+      { start: 8, end: 9, original: 'х', replacement: 'kh' },
+    ]);
+  });
+
   it('не чіпає рядки, коментарі й регулярні вирази', () => {
     assert.equal(
       translateToJs('потужно х = "потужно відкат"; // відкат'),

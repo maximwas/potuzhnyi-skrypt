@@ -22,14 +22,19 @@ export function HighlightedEditor({ value, html, onChange }: HighlightedEditorPr
   };
 
   return (
-    <div className="bg-deep text-paper focus-within:outline-yellow relative h-72 min-w-0 overflow-hidden rounded-md focus-within:outline-3 focus-within:outline-offset-2 md:h-96">
+    <div
+      data-lenis-prevent
+      className="focus-within:outline-yellow relative h-72 min-w-0 overflow-hidden focus-within:outline-3 focus-within:outline-offset-[-6px] md:h-96"
+    >
       <div
         ref={layerRef}
+        data-lenis-prevent
         aria-hidden="true"
         className={`${EDITOR_TYPOGRAPHY} ${SHIKI_RESET} pointer-events-none absolute inset-0 overflow-hidden`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
       <textarea
+        data-lenis-prevent
         aria-label="Код .potuzhno"
         value={value}
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => onChange(event.target.value)}

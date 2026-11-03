@@ -14,13 +14,13 @@ export default function HomePage() {
       <SiteHeader />
       <main>
         <Hero />
-        <TowelDivider className="bg-paper" />
+        <TowelDivider tone="dark" className="bg-deep" />
         <AboutSection />
-        <KalynaDivider />
+        <KalynaDivider className="bg-yellow" />
         <PlaygroundSection />
-        <TowelDivider />
+        <TowelDivider tone="dark" className="bg-blue" />
         <DictionarySection />
-        <KalynaDivider />
+        <KalynaDivider tone="dark" className="bg-deep" />
         <GettingStartedSection />
       </main>
       <SiteFooter />

@@ -11,15 +11,19 @@ import { usePlaygroundHighlighter } from '../lib/use-playground-highlighter.ts';
 import { useScriptRun } from '../lib/use-script-run.ts';
 import { HighlightedEditor } from './highlighted-editor.tsx';
 import { OutputPane, type TransformPlayback } from './output-pane.tsx';
+import { ReplacementsBadge } from './replacements-badge.tsx';
 import { RunPanel } from './run-panel.tsx';
+import { StickerWindow } from './sticker-window.tsx';
+import { TranslateArrow } from './translate-arrow.tsx';
 
 const DEBOUNCE_MILLISECONDS = 120;
 const translator = createPlaygroundTranslator(reservedWords);
 const planner = new TransformPlanner({ maxAnimatedWords: 40 });
 const FIRST_EXAMPLE = PLAYGROUND_EXAMPLES[0];
 
+// Кнопка-наліпка: тінь «втискається» при наведенні й натисканні (лише для активної кнопки).
 const BUTTON =
-  'min-h-11 rounded-md px-4 font-sans text-base font-semibold focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue disabled:opacity-50';
+  'border-ink shadow-hard-sm focus-visible:outline-blue min-h-11 cursor-pointer rounded-lg border-[3px] px-4 font-mono text-sm font-extrabold tracking-wide uppercase transition-[transform,box-shadow] duration-100 focus-visible:outline-3 focus-visible:outline-offset-4 enabled:hover:translate-x-0.5 enabled:hover:translate-y-0.5 enabled:hover:shadow-[2px_2px_0_var(--color-ink)] enabled:active:translate-x-1 enabled:active:translate-y-1 enabled:active:shadow-none disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none';
 
 export function PlaygroundWorkbench() {
   const [exampleId, setExampleId] = useState(FIRST_EXAMPLE.id);
@@ -28,6 +32,7 @@ export function PlaygroundWorkbench() {
   const [goodCode, setGoodCode] = useState(translation.ok ? translation.code : '');
   const [playback, setPlayback] = useState<TransformPlayback | null>(null);
   const [copyMessage, setCopyMessage] = useState('');
+  const [translationRuns, setTranslationRuns] = useState(0);
   const previousRanges = useRef<OutputRange[] | null>(null);
   const playbackCounter = useRef(0);
   const highlighter = usePlaygroundHighlighter();
@@ -44,6 +49,7 @@ export function PlaygroundWorkbench() {
       }
 
       setGoodCode(next.code);
+      setTranslationRuns((count) => count + 1);
 
       const ranges = planner.toOutputRanges(next.replacements);
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -93,15 +99,17 @@ export function PlaygroundWorkbench() {
     }
   };
 
+  const badgeLabel = translation.ok ? `замін: ${translation.replacements.length}` : 'помилка';
+
   return (
-    <div className="mt-8 grid gap-4">
+    <div className="mt-10 grid gap-6">
       <div className="flex flex-wrap items-end gap-3">
-        <label className="grid gap-1 font-sans text-sm font-semibold">
+        <label className="text-ink grid gap-1 font-mono text-xs font-bold tracking-wider uppercase">
           Приклад
           <select
             value={exampleId}
             onChange={(event) => loadExample(event.target.value)}
-            className="border-ink bg-paper text-ink focus-visible:outline-blue min-h-11 rounded-md border px-3 text-base focus-visible:outline-3 focus-visible:outline-offset-2"
+            className="border-ink bg-paper text-ink shadow-hard-sm focus-visible:outline-blue min-h-11 cursor-pointer rounded-lg border-[3px] px-3 font-mono text-base font-bold normal-case select-none focus-visible:outline-3 focus-visible:outline-offset-4"
           >
             {PLAYGROUND_EXAMPLES.map((example) => (
               <option key={example.id} value={example.id}>
@@ -113,47 +121,51 @@ export function PlaygroundWorkbench() {
         <button
           type="button"
           onClick={() => loadExample(exampleId)}
-          className={`${BUTTON} border-ink text-ink border`}
+          className={`${BUTTON} bg-paper text-ink`}
         >
           Скинути
         </button>
         <button
           type="button"
           onClick={() => void copyCode()}
-          className={`${BUTTON} border-ink text-ink border`}
+          className={`${BUTTON} bg-paper text-ink`}
         >
           Копіювати JS
         </button>
         <button
           type="button"
           disabled={!translation.ok || runState.status === 'running'}
+          aria-busy={runState.status === 'running'}
           onClick={() => void run(goodCode)}
-          className={`${BUTTON} bg-blue text-paper`}
+          className={`${BUTTON} bg-ink text-yellow`}
         >
-          Запустити
+          Запустити ▶
         </button>
       </div>
 
-      <div className="grid gap-4 min-[900px]:grid-cols-2">
-        <div className="grid min-w-0 gap-2">
-          <p className="font-sans text-sm font-semibold">Ти пишеш (ПотужнийСкрипт)</p>
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-2 min-[900px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[900px]:items-center min-[900px]:gap-5">
+        <StickerWindow title="ти пишеш: .potuzhno" tone="deep">
           <HighlightedEditor value={source} html={sourceHtml} onChange={setSource} />
-        </div>
-        <div className="grid min-w-0 gap-2">
-          <p className="font-sans text-sm font-semibold">Виходить (JavaScript)</p>
+        </StickerWindow>
+        <TranslateArrow pulse={translationRuns} />
+        <StickerWindow
+          title="виходить: JavaScript"
+          tone="ink"
+          badge={<ReplacementsBadge label={badgeLabel} failed={!translation.ok} />}
+        >
           <OutputPane html={outputHtml} playback={playback} dimmed={!translation.ok} />
-        </div>
+        </StickerWindow>
       </div>
 
       <p
         role="status"
-        className={`font-sans text-sm ${translation.ok ? 'text-muted' : 'text-red'}`}
+        className={`font-mono text-sm font-bold ${translation.ok ? 'text-ink' : 'border-ink bg-red text-paper shadow-hard-sm w-fit max-w-full rounded-lg border-[3px] px-3 py-2'}`}
       >
         {status} {copyMessage}
       </p>
 
       <RunPanel state={runState} />
-      <p className="text-muted font-sans text-sm">
+      <p className="text-ink font-mono text-xs">
         Код виконується лише в твоєму браузері, в окремому потоці без доступу до сторінки, і
         зупиняється за 2 секунди.
       </p>

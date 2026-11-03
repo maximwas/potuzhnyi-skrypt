@@ -14,6 +14,12 @@ const labels: Record<CopyState, string> = {
   failed: 'Не вдалося, виділіть вручну',
 };
 
+const tones: Record<CopyState, string> = {
+  idle: 'bg-yellow text-ink',
+  copied: 'bg-green text-paper',
+  failed: 'bg-red text-paper',
+};
+
 export function CopyButton({ text }: CopyButtonProps) {
   const [state, setState] = useState<CopyState>('idle');
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -37,7 +43,7 @@ export function CopyButton({ text }: CopyButtonProps) {
       <button
         type="button"
         onClick={copy}
-        className="cursor-pointer rounded bg-yellow px-3 py-1 font-mono text-xs font-bold text-deep hover:bg-paper"
+        className={`border-ink cursor-pointer rounded-md border-2 px-3 py-1 font-mono text-xs font-bold shadow-[3px_3px_0_var(--color-ink)] transition-[transform,box-shadow] duration-100 hover:translate-x-px hover:translate-y-px hover:shadow-[2px_2px_0_var(--color-ink)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none motion-reduce:transition-none ${tones[state]}`}
       >
         {labels[state]}
       </button>

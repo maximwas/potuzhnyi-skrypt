@@ -42,7 +42,13 @@ export function TowelDivider({ className = '', tone = 'light' }: TowelDividerPro
           </g>
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+      {/* shortcut: прямокутник 6000 px покриває екрани до надширокого, на ширшому буде порожнеча праворуч, тоді брати ширину через ResizeObserver */}
+      <rect
+        width="6000"
+        height="100%"
+        fill={`url(#${patternId})`}
+        className="ticker [--ticker-tile:80px] [--ticker-duration:2.4s]"
+      />
     </svg>
   );
 }

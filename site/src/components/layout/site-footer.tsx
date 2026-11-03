@@ -1,48 +1,61 @@
-import { PhotoCreditsList } from '@/features/credits/components/photo-credits-list';
+import Link from 'next/link';
+
+import { MarqueeBand } from '@/components/ornaments/marquee-band';
+
+const MARQUEE_WORDS = ['потужно', 'батон', 'схема', 'партія', 'по_новому', 'перемога'] as const;
 
 export function SiteFooter() {
   return (
-    <footer id="credits" className="bg-deep text-paper">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <p className="font-mono text-2xl text-yellow">ПотужнийСкрипт</p>
-        <p className="mt-2 max-w-2xl font-serif text-lg">
+    <footer className="bg-deep text-paper">
+      <MarqueeBand items={MARQUEE_WORDS} tone="yellow" durationSeconds={28} />
+
+      <div className="mx-auto max-w-6xl px-4 pt-16 pb-8 sm:px-6 sm:pt-24">
+        <p className="font-display text-yellow text-[clamp(2.25rem,11vw,8rem)] leading-[0.92] font-black uppercase [text-shadow:5px_5px_0_var(--color-red)]">
+          <span className="block">Потужний</span>
+          <span className="block">Скрипт</span>
+        </p>
+        <p className="mt-6 max-w-2xl font-serif text-lg">
           JavaScript з мемними словами: пишеш у файлі <code className="font-mono">.potuzhno</code>,
           отримуєш звичайний JS.
         </p>
 
-        <section aria-labelledby="disclaimer-title" className="mt-12 max-w-3xl">
-          <h3 id="disclaimer-title" className="font-mono text-base text-yellow">
+        <section
+          aria-labelledby="disclaimer-title"
+          className="border-yellow mt-12 max-w-3xl border-l-4 pl-5"
+        >
+          <h3
+            id="disclaimer-title"
+            className="font-display text-yellow text-lg font-black uppercase"
+          >
             Застереження
           </h3>
           <p className="mt-3 font-serif leading-relaxed">
             Це сатира й пародія на публічні меми про мову. Вона нікого ні в чому не звинувачує: збіг
-            слів із подіями чи людьми — це жарт про слова, а не твердження про факти. Проєкт ні з
-            ким не афілійований і нічиєї думки не представляє.
+            слів із подіями чи людьми — це жарт про слова, а не твердження про факти. Слова в
+            бульбашках на сцені — це ключові слова мови, а не цитати людей на фото. Проєкт ні з ким
+            не афілійований і нічиєї думки не представляє.
           </p>
         </section>
 
-        <section aria-labelledby="photos-title" className="mt-12">
-          <h3 id="photos-title" className="font-mono text-base text-yellow">
-            Фото
-          </h3>
-          <div className="mt-4">
-            <PhotoCreditsList />
-          </div>
-        </section>
-
-        <section aria-labelledby="licenses-title" className="mt-12 max-w-3xl">
-          <h3 id="licenses-title" className="font-mono text-base text-yellow">
-            Ліцензії
-          </h3>
-          <p className="mt-3 font-serif leading-relaxed">
-            Фотографії взято з Wikimedia Commons за ліцензіями CC BY, CC BY-SA 4.0, CC0 або як
-            суспільне надбання, як указано біля кожного фото. Файли CC BY-SA лишаються CC BY-SA і
-            після зменшення та стиснення. Ці ліцензії не поширюються на код ПотужногоСкрипта.
+        <div className="border-paper/30 mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t pt-6">
+          <p className="max-w-3xl font-serif text-sm leading-relaxed">
+            Це хобі-проєкт без комерційного використання.
           </p>
-        </section>
+          <a
+            href="#top"
+            className="bg-yellow text-ink border-ink inline-flex min-h-11 items-center rounded-lg border-[3px] px-5 font-mono text-sm font-bold shadow-[4px_4px_0_var(--color-paper)] transition-[transform,box-shadow] duration-100 hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-paper)] active:translate-x-1 active:translate-y-1 active:shadow-none motion-reduce:transition-none"
+          >
+            Нагору ↑
+          </a>
+        </div>
 
-        <p className="mt-12 max-w-3xl border-t border-paper/30 pt-6 font-serif text-sm leading-relaxed">
-          Це хобі-проєкт без комерційного використання.
+        <p className="mt-8 text-xs">
+          <Link
+            href="/credits/"
+            className="text-paper/60 hover:text-paper underline underline-offset-4"
+          >
+            Автори фото
+          </Link>
         </p>
       </div>
     </footer>

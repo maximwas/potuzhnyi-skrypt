@@ -6,4 +6,8 @@ export default defineConfig([
   globalIgnores(['.next/', 'out/', 'node_modules/', 'next-env.d.ts']),
   ...nextCoreWebVitals,
   ...nextTypescript,
+  {
+    // Статичний експорт: next/image тут не оптимізує, тож картинки сцени звичайні <img>.
+    rules: { '@next/next/no-img-element': 'off' },
+  },
 ]);

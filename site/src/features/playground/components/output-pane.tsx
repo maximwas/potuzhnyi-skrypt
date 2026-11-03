@@ -29,10 +29,11 @@ export function OutputPane({ html, playback, dimmed }: OutputPaneProps) {
   return (
     <div
       ref={paneRef}
+      data-lenis-prevent
       role="region"
       tabIndex={0}
       aria-label="Результат JavaScript"
-      className={`${EDITOR_TYPOGRAPHY} ${SHIKI_RESET} bg-deep text-paper focus-visible:outline-yellow h-72 min-w-0 overflow-auto rounded-md focus-visible:outline-3 focus-visible:outline-offset-2 md:h-96 ${dimmed ? 'opacity-60' : ''}`}
+      className={`${EDITOR_TYPOGRAPHY} ${SHIKI_RESET} text-paper focus-visible:outline-yellow h-72 min-w-0 overflow-auto focus-visible:outline-3 focus-visible:outline-offset-[-6px] md:h-96 ${dimmed ? 'opacity-60' : ''}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

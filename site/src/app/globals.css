@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'lenis/dist/lenis.css';
 
 @theme {
   --color-paper: #f6efdf;
@@ -12,10 +13,26 @@
   --color-green: #2f5d3a;
   --font-serif: var(--font-literata), Georgia, 'Times New Roman', serif;
   --font-mono: var(--font-jetbrains), ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-display: var(--font-unbounded), 'Arial Black', Impact, sans-serif;
+  --shadow-hard: 6px 6px 0 var(--color-ink);
+  --shadow-hard-yellow: 6px 6px 0 var(--color-yellow);
+  --shadow-hard-sm: 4px 4px 0 var(--color-ink);
 }
 
-html {
-  scroll-behavior: smooth;
+/* Наліпка: товста рамка й жорстка тінь, як на мемному постері. */
+@utility sticker {
+  border: 3px solid var(--color-ink);
+  box-shadow: var(--shadow-hard);
+  border-radius: 0.75rem;
+}
+
+/* Растр із крапок для тла паперових секцій. */
+@utility halftone {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-ink) 16%, transparent) 1.4px,
+    transparent 1.7px
+  );
+  background-size: 14px 14px;
 }
 
 body {
@@ -32,8 +49,67 @@ body {
   outline-offset: 3px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+
+/* Бігуча стрічка: прямокутник із візерунком зсувається рівно на одну плитку, тож цикл безшовний. */
+@keyframes ticker-shift {
+  to {
+    transform: translateX(calc(var(--ticker-tile) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ticker {
+    animation: ticker-shift var(--ticker-duration) linear infinite;
+  }
+}
+
+@keyframes marquee-left {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shout {
+  0%,
+  100% {
+    transform: rotate(var(--tilt, -3deg)) scale(1);
+  }
+  25% {
+    transform: rotate(calc(var(--tilt, -3deg) + 2deg)) scale(1.06);
+  }
+  60% {
+    transform: rotate(calc(var(--tilt, -3deg) - 2deg)) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee {
+    animation: marquee-left var(--marquee-duration, 30s) linear infinite;
+  }
+
+  .caret {
+    animation: blink 1s steps(1) infinite;
+  }
+
+  .ring-spin {
+    transform-origin: 50% 50%;
+    animation: ring-spin var(--ring-duration) linear infinite;
+    animation-direction: var(--ring-direction, normal);
+  }
+
+  .shout {
+    animation: shout 0.7s ease-in-out infinite;
   }
 }

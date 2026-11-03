@@ -15,8 +15,14 @@ export function GettingStartedSection() {
           Як <span className="bg-blue text-paper inline-block rotate-2 px-3 py-1">почати</span>
         </h2>
         <p className="text-ink mt-6 max-w-2xl text-lg">
-          Поки що нічого не опубліковано ні в npm, ні в Marketplace, а репозиторій приватний. Тож
-          усе збирається з репозиторію потужного скрипта вручну.
+          Поки що нічого не опубліковано ні в npm, ні в Marketplace. Тож усе збирається вручну з{' '}
+          <a
+            href="https://github.com/maximwas/potuzhnyi-skrypt"
+            className="hover:bg-yellow font-bold underline decoration-2 underline-offset-4"
+          >
+            репозиторію на GitHub
+          </a>
+          .
         </p>
 
         <ol className="mt-12 grid grid-cols-[minmax(0,1fr)] gap-12">

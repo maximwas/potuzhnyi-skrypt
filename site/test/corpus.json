@@ -1,0 +1,154 @@
+[
+ {
+  "name": "examples/бюджет.potuzhno",
+  "source": "батон ВІДКАТ = 0.1;\nпотужно бюджет = [100, 200, 300];\n\nсхема розпилити(сума) {\n  відкат сума * ВІДКАТ;\n}\n\nпартія Депутат кум Майно {\n  будівництво(імʼя) {\n    папєрєднікі();\n    я_тут.імʼя = імʼя;\n  }\n}\n\nпотужно відкати = бюджет.розпил(розпилити);\nОП.звернення(`Відкати: ${відкати.коса(\", \")}`);\n\nпотужно сізо = по_новому Фракція();\nпронесе {\n  щоб (відкати.кровосісі((а, б) => а + б, 0) > 50) {\n    вирок по_новому Ганьба(\"Забагато відкатів\");\n  } хто_не_чув {\n    ОП.звернення(\"Схема чиста\");\n  }\n} набу (е) {\n  сізо.в_команду(по_новому Депутат(\"Петренко\"));\n  ОП.ганьба(е.формулювання);\n} застава {\n  ОП.звернення(`У СІЗО: ${сізо.склад}, вийшли під заставу`);\n}\n"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "потужно х = 1;"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "потужно х = \"потужно відкат\"; // відкат"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "батон р = /відкат/g;"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "ОП.звернення(`потужно ${бюджет.розпил(х => х)}`)"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "а донат_на_дрони б"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "`${а відпил_бюджету б}`"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "а залишок_після_розпилу 2"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "а відпил_бюджету-1"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "а донат_на_дрони+1"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "а відпил_бюджету--б"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "а ділити_по_братськи/* коментар */ б"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "донат_на_дрони донат_на_дрони х"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "Депутат Згорани Єнакієве ЩУКА ВІДКАТ мій_ящик2 myБюджет"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "я_тут.#поле"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "імʼя ім’я"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "по_новому Сім’я()"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "потужно до = 1; потужно Сет = 2"
+ },
+ {
+  "name": "test/translation/translator.test.ts",
+  "source": "кут + кут"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "`текст ${назва} кінець`"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "ім’я"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "імʼя"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "#поле"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "відкат /потужно/g.test(х)"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "відкат /\"/.test(х) + \"рядок\""
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "анкета /* прапор */ /потужно/"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "а / б / в"
+ },
+ {
+  "name": "test/translation/identifier-scanner.test.ts",
+  "source": "х.відкат / б / в"
+ },
+ {
+  "name": "handwritten",
+  "source": "відкат /потужно/g.test(х)"
+ },
+ {
+  "name": "handwritten",
+  "source": "відкат /\"/.test(х) + \"рядок\""
+ },
+ {
+  "name": "handwritten",
+  "source": "анкета /* прапор */ /потужно/"
+ },
+ {
+  "name": "handwritten",
+  "source": "а / б / в; х.відкат / б / в"
+ },
+ {
+  "name": "handwritten",
+  "source": "а відпил_бюджету 1; відпил-1; поділити/б"
+ },
+ {
+  "name": "handwritten",
+  "source": "ця_каденція.#поле = ім’я; клас.#приватне"
+ },
+ {
+  "name": "handwritten",
+  "source": "`вкладений ${`у ${бюджет.розпил(х => х)} шаблон`} кінець`"
+ },
+ {
+  "name": "handwritten",
+  "source": "батон Депутат = 1; потужно депутат_2 = Депутат;"
+ },
+ {
+  "name": "handwritten",
+  "source": "потужно Сет = по_новому Фракція();"
+ },
+ {
+  "name": "browser-global",
+  "source": "потужно статус = 1; ОП.звернення(статус);"
+ }
+]

@@ -7,6 +7,7 @@
     "dev": "npm run generate && next dev",
     "build": "npm run generate && next build",
     "lint": "eslint .",
+    "pretypecheck": "npm run generate",
     "typecheck": "tsc --noEmit",
     "test": "node --test \"test/**/*.test.ts\""
   },

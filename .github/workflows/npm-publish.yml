@@ -1,0 +1,46 @@
+name: Публікація в npm
+
+# Токенів немає: npm Trusted Publishing (OIDC). Зв'язок пакета з цим файлом налаштовано
+# командою `npm trust github` (див. розділ «Випуск в npm» у CLAUDE.md).
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      - name: Тег збігається з версією в package.json
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Тег $GITHUB_REF_NAME не збігається з версією $version у package.json"
+            exit 1
+          fi
+
+      - name: Комміт тега лежить у main
+        run: |
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "Комміт $GITHUB_SHA не в main: спершу PR у main, потім тег"
+            exit 1
+          fi
+
+      - run: npm ci
+
+      # prepublishOnly сам ганяє npm run check і збірку
+      - run: npm publish

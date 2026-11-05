@@ -4,6 +4,7 @@
   "description": "ПотужнийСкрипт — мемна мова програмування поверх JavaScript",
   "license": "MIT",
   "author": "maximwas",
+  "homepage": "https://maximwas.github.io/potuzhnyi-skrypt/",
   "type": "module",
   "bin": {
     "potuzhno": "./dist/bin/potuzhno.js"

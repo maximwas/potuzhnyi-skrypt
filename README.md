@@ -1,5 +1,7 @@
 # ПотужнийСкрипт
 
+[Сайт](https://maximwas.github.io/potuzhnyi-skrypt/) · [npm](https://www.npmjs.com/package/potuzhnyi-script)
+
 Мемна мова програмування: звичайний JavaScript, але файли мають розширення `.potuzhno`,
 а ключові слова й методи названі на честь мемів про українську політику.
 

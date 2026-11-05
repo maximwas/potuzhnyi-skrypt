@@ -15,7 +15,7 @@ export function GettingStartedSection() {
           Як <span className="bg-blue text-paper inline-block rotate-2 px-3 py-1">почати</span>
         </h2>
         <p className="text-ink mt-6 max-w-2xl text-lg">
-          Поки що нічого не опубліковано ні в npm, ні в Marketplace. Тож усе збирається вручну з{' '}
+          Пакет уже в npm. Розширення для VS Code поки що не в Marketplace, його збирають вручну з{' '}
           <a
             href="https://github.com/maximwas/potuzhnyi-skrypt"
             className="hover:bg-yellow font-bold underline decoration-2 underline-offset-4"
@@ -28,14 +28,19 @@ export function GettingStartedSection() {
         <ol className="mt-12 grid grid-cols-[minmax(0,1fr)] gap-12">
           <StepCard number="01" title="Командний рядок" tiltClassName="-rotate-3">
             <p>
-              Потрібен Node.js не нижче <span className={codeInline}>26.2</span>: він сам прибирає
-              типи з TypeScript, тож збірки немає. Склонуйте репозиторій потужного скрипта, зайдіть
-              у його теку й запустіть приклад:
+              Потрібен Node.js не нижче <span className={codeInline}>26.2</span>. Встановіть пакет з
+              npm і запустіть файл:
             </p>
             <CodeBlock
               label="термінал"
-              lines={['npm ci', 'node bin/potuzhno.ts examples/бюджет.potuzhno']}
+              lines={['npm install -g potuzhnyi-script', 'potuzhno файл.potuzhno']}
             />
+            <p>
+              Щоб віддати програму без потужного скрипта, зберіть її в звичайний JavaScript:{' '}
+              <span className={codeInline}>potuzhno build</span> читає{' '}
+              <span className={codeInline}>потужнийконфіг.json</span>, а з{' '}
+              <span className={codeInline}>-w</span> перезбирає після кожної зміни.
+            </p>
           </StepCard>
 
           <StepCard number="02" title="Файли .potuzhno" tiltClassName="rotate-2">
@@ -47,8 +52,8 @@ export function GettingStartedSection() {
 
           <StepCard number="03" title="Розширення для VS Code" tiltClassName="-rotate-2">
             <p>
-              Спершу виконайте <span className={codeInline}>npm ci</span> у корені репозиторію,
-              потім зберіть і встановіть розширення:
+              Склонуйте репозиторій, виконайте <span className={codeInline}>npm ci</span> у його
+              корені, потім зберіть і встановіть розширення:
             </p>
             <CodeBlock
               label="термінал"

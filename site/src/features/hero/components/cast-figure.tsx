@@ -6,7 +6,7 @@ import { type CSSProperties, useState } from 'react';
 
 import { withBasePath } from '@/lib/with-base-path';
 
-import { type CastMember, SHOUTS } from '../data/cast.ts';
+import { type CastMember, type Placement, SHOUTS } from '../data/cast.ts';
 
 interface CastFigureProps {
   readonly member: CastMember;
@@ -17,6 +17,19 @@ interface CastFigureProps {
 
 const ENTER_DISTANCE_PERCENT = { left: -120, right: 120, bottom: 0 } as const;
 
+function getBubbleStyle(placement: Placement, breakpoint: 'mobile' | 'desktop') {
+  const isOnRight = placement.bubbleSide === 'right';
+
+  return {
+    [`--lift-${breakpoint}`]: `${placement.bubbleLift}%`,
+    [`--bubble-left-${breakpoint}`]: isOnRight ? `${placement.bubbleOffset}%` : 'auto',
+    [`--bubble-right-${breakpoint}`]: isOnRight ? 'auto' : `${placement.bubbleOffset}%`,
+    [`--tail-left-${breakpoint}`]: isOnRight ? '1.25rem' : 'auto',
+    [`--tail-right-${breakpoint}`]: isOnRight ? 'auto' : '1.25rem',
+    [`--origin-${breakpoint}`]: isOnRight ? 'bottom left' : 'bottom right',
+  };
+}
+
 function getPlacementStyle(member: CastMember, zIndex: number): CSSProperties {
   const mobile = member.mobile ?? member.desktop;
 
@@ -25,6 +38,8 @@ function getPlacementStyle(member: CastMember, zIndex: number): CSSProperties {
     '--height-mobile': `${mobile.height}%`,
     '--left-desktop': `${member.desktop.left}%`,
     '--height-desktop': `${member.desktop.height}%`,
+    ...getBubbleStyle(mobile, 'mobile'),
+    ...getBubbleStyle(member.desktop, 'desktop'),
     aspectRatio: `${member.width} / ${member.height}`,
     zIndex,
   } as CSSProperties;
@@ -61,9 +76,8 @@ export function CastFigure({ member, progress, pointer, appearAt }: CastFigurePr
     });
   };
 
-  const isBubbleOnRight = member.bubbleSide === 'right';
-  const visibilityClassName = member.mobile ? '' : 'hidden sm:block';
-  const boxClassName = `absolute bottom-0 left-(--left-mobile) h-(--height-mobile) -translate-x-1/2 sm:left-(--left-desktop) sm:h-(--height-desktop) ${visibilityClassName}`;
+  const visibilityClassName = member.mobile ? '' : 'hidden xl:block';
+  const boxClassName = `absolute bottom-0 left-(--left-mobile) h-(--height-mobile) -translate-x-1/2 xl:left-(--left-desktop) xl:h-(--height-desktop) ${visibilityClassName}`;
 
   return (
     <>
@@ -99,11 +113,7 @@ export function CastFigure({ member, progress, pointer, appearAt }: CastFigurePr
           <m.div style={{ opacity, x: enterX, y: enterY }} className="relative h-full w-full">
             <m.div
               style={{ scale: bubbleScale }}
-              className={`absolute bottom-[90%] ${
-                isBubbleOnRight
-                  ? 'left-[46%] origin-bottom-left'
-                  : 'right-[46%] origin-bottom-right'
-              }`}
+              className="absolute bottom-(--lift-mobile) left-(--bubble-left-mobile) origin-(--origin-mobile) right-(--bubble-right-mobile) xl:bottom-(--lift-desktop) xl:left-(--bubble-left-desktop) xl:origin-(--origin-desktop) xl:right-(--bubble-right-desktop)"
             >
               <m.div
                 key={shout.word}
@@ -112,20 +122,18 @@ export function CastFigure({ member, progress, pointer, appearAt }: CastFigurePr
                 transition={{ type: 'spring', stiffness: 520, damping: 14 }}
               >
                 <div
-                  className="shout border-ink bg-paper text-ink relative rounded-2xl border-[3px] px-3 py-1.5 whitespace-nowrap shadow-[4px_4px_0_#000]"
+                  className="shout border-ink bg-paper text-ink relative min-w-[8.25rem] rounded-2xl border-[3px] px-3 py-1.5 text-center whitespace-nowrap shadow-[4px_4px_0_#000] xl:min-w-[13.75rem]"
                   style={{ '--tilt': `${member.bubbleTiltDegrees}deg` } as CSSProperties}
                 >
-                  <span className="font-display block text-[0.7rem] leading-none font-black sm:text-base">
+                  <span className="font-display block text-[0.7rem] leading-none font-black xl:text-base">
                     {shout.word}
                   </span>
-                  <span className="text-blue block font-mono text-[0.55rem] leading-tight font-bold sm:text-xs">
+                  <span className="text-blue block font-mono text-[0.55rem] leading-tight font-bold xl:text-xs">
                     = {shout.jsWord}
                   </span>
                   <span
                     aria-hidden="true"
-                    className={`border-ink bg-paper absolute -bottom-[11px] h-4 w-4 rotate-45 border-r-[3px] border-b-[3px] ${
-                      isBubbleOnRight ? 'left-5' : 'right-5'
-                    }`}
+                    className="border-ink bg-paper absolute -bottom-[11px] left-(--tail-left-mobile) h-4 w-4 rotate-45 border-r-[3px] border-b-[3px] right-(--tail-right-mobile) xl:left-(--tail-left-desktop) xl:right-(--tail-right-desktop)"
                   />
                 </div>
               </m.div>

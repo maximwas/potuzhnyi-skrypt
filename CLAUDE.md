@@ -4,7 +4,7 @@
 
 - Гілки: `main` — стабільна, `develop` — робоча. Уся робота йде в `develop`, у `main` — тільки через PR із `develop`.
 - Повідомлення коммітів і PR (заголовок і опис) — українською.
-- Репозиторій: github.com/maximwas/potuzhnyi-skrypt (приватний).
+- Репозиторій: github.com/maximwas/potuzhnyi-skrypt (публічний).
 
 ## Випуск в npm
 

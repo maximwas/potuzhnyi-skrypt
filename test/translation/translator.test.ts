@@ -113,3 +113,59 @@ describe('Translator', () => {
     });
   });
 });
+
+describe('Translator: шляхи імпорту зібраного коду', () => {
+  function translateForBuild(source: string): string {
+    return translator.translate(source, 'test.potuzhno', { importExtension: '.js' }).code;
+  }
+
+  it('міняє .potuzhno на .js у всіх видах імпорту й реекспорту', () => {
+    const source = [
+      'завезти Кошик з "./кошик.potuzhno";',
+      "завезти { а як б } з '../х/гроші.potuzhno';",
+      'завезти * як вітрина з "./індекс.potuzhno";',
+      'завезти "./побічний.potuzhno";',
+      'вивезти { тво як Кошик } з "./кошик.potuzhno";',
+      'вивезти * з "./товари.potuzhno";',
+      'батон пакунок = два_три_тижні завезти("./гроші.potuzhno");',
+    ].join('\n');
+
+    assert.equal(
+      translateForBuild(source),
+      [
+        'import Koshyk from "./кошик.js";',
+        "import { a as b } from '../х/гроші.js';",
+        'import * as vitryna from "./індекс.js";',
+        'import "./побічний.js";',
+        'export { default as Koshyk } from "./кошик.js";',
+        'export * from "./товари.js";',
+        'const pakunok = await import("./гроші.js");',
+      ].join('\n'),
+    );
+  });
+
+  it('не чіпає звичайні рядки, пакети й шляхи без .potuzhno', () => {
+    const source = [
+      'ОП.звернення("./кошик.potuzhno");',
+      'завезти { х } з "node:fs";',
+      'завезти { у } з "./файл.js";',
+      'завезти { ж } з "пакет.potuzhno";',
+      'об.import("./а.potuzhno");',
+    ].join('\n');
+
+    assert.equal(
+      translateForBuild(source),
+      [
+        'console.log("./кошик.potuzhno");',
+        'import { kh } from "node:fs";',
+        'import { u } from "./файл.js";',
+        'import { zh } from "пакет.potuzhno";',
+        'ob.import("./а.potuzhno");',
+      ].join('\n'),
+    );
+  });
+
+  it('без опції лишає шляхи як є', () => {
+    assert.equal(translateToJs('завезти х з "./а.potuzhno";'), 'import kh from "./а.potuzhno";');
+  });
+});

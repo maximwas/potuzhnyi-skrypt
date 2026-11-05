@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { CommandLine, type ScriptExecutor } from '../../src/cli/command-line.ts';
+import { CommandLine, type BuildRunner, type ScriptExecutor } from '../../src/cli/command-line.ts';
 import { NameCollisionError } from '../../src/translation/name-collision-error.ts';
 
 const BIN_PATH = fileURLToPath(new URL('../../bin/potuzhno.ts', import.meta.url));
@@ -20,10 +20,13 @@ describe('CommandLine', () => {
   const loggedMessages: string[] = [];
   const logger = { error: (message: string) => loggedMessages.push(message) };
 
-  function createCommandLine(scriptRunner: ScriptExecutor): CommandLine {
+  function createCommandLine(
+    scriptRunner: ScriptExecutor,
+    buildCommand: BuildRunner = { run: async () => 0 },
+  ): CommandLine {
     loggedMessages.length = 0;
 
-    return new CommandLine({ scriptRunner, logger });
+    return new CommandLine({ scriptRunner, buildCommand, logger });
   }
 
   it('без аргументів друкує підказку й повертає код 1', async () => {
@@ -31,6 +34,35 @@ describe('CommandLine', () => {
 
     assert.equal(await commandLine.run([]), 1);
     assert.match(loggedMessages[0], /Як запустити/);
+  });
+
+  it('підказка згадує і запуск, і збірку', async () => {
+    const commandLine = createCommandLine({ run: async () => undefined });
+
+    await commandLine.run([]);
+
+    assert.match(loggedMessages[0], /potuzhno build/);
+  });
+
+  it('команду build віддає збірці з рештою аргументів і її кодом виходу', async () => {
+    const receivedArgs: (readonly string[])[] = [];
+    const commandLine = createCommandLine(
+      {
+        run: async () => {
+          throw new Error('скрипт не мав запускатися');
+        },
+      },
+      {
+        run: async (args) => {
+          receivedArgs.push(args);
+
+          return 7;
+        },
+      },
+    );
+
+    assert.equal(await commandLine.run(['build', '-w', '-p', 'тека']), 7);
+    assert.deepEqual(receivedArgs, [['-w', '-p', 'тека']]);
   });
 
   it('запускає вказаний файл і повертає код 0', async () => {

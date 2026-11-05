@@ -2,6 +2,8 @@
   "name": "potuzhno",
   "version": "0.1.0",
   "description": "ПотужнийСкрипт — мемна мова програмування поверх JavaScript",
+  "license": "MIT",
+  "author": "maximwas",
   "type": "module",
   "bin": {
     "potuzhno": "./dist/bin/potuzhno.js"
@@ -31,6 +33,8 @@
   },
   "dependencies": {
     "awilix": "13.0.5",
+    "chokidar": "6.0.0",
+    "esbuild": "0.28.2",
     "js-tokens": "10.0.0",
     "kmu-translit": "1.0.0",
     "magic-string": "1.4.3"

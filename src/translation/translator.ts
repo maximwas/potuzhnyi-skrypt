@@ -4,6 +4,7 @@ import type { MemeDictionary } from '../dictionary/meme-dictionary.ts';
 import type { LatinTransliterator } from '../transliteration/latin-transliterator.ts';
 import type { IdentifierScanner, SourceIdentifier } from './identifier-scanner.ts';
 import { NameCollisionError } from './name-collision-error.ts';
+import { POTUZHNO_EXTENSION } from './potuzhno-extension.ts';
 
 // Одна заміна в тексті: діапазон у вихідному коді, що саме було й що стало.
 export interface Replacement {
@@ -17,6 +18,11 @@ export interface TranslationResult {
   readonly code: string;
   readonly sourceMap: SourceMap;
   readonly replacements: readonly Replacement[];
+}
+
+export interface TranslateOptions {
+  // Для зібраного коду: шляхи імпорту `./файл.potuzhno` стають `./файл<розширення>`.
+  readonly importExtension?: string;
 }
 
 interface TranslatorDependencies {
@@ -52,7 +58,11 @@ export class Translator {
     this.latinTransliterator = latinTransliterator;
   }
 
-  public translate(source: string, fileName: string): TranslationResult {
+  public translate(
+    source: string,
+    fileName: string,
+    options: TranslateOptions = {},
+  ): TranslationResult {
     const context: TranslationContext = {
       source,
       fileName,
@@ -65,6 +75,10 @@ export class Translator {
       this.translateIdentifier(identifier, context);
     }
 
+    if (options.importExtension !== undefined) {
+      this.rewriteImportExtensions(source, options.importExtension, context.editor);
+    }
+
     return {
       code: context.editor.toString(),
       sourceMap: context.editor.generateMap({
@@ -74,6 +88,18 @@ export class Translator {
       }),
       replacements: context.replacements,
     };
+  }
+
+  private rewriteImportExtensions(
+    source: string,
+    importExtension: string,
+    editor: MagicString,
+  ): void {
+    for (const specifier of this.identifierScanner.scanImportSpecifiers(source)) {
+      if (specifier.value.startsWith('.') && specifier.value.endsWith(POTUZHNO_EXTENSION)) {
+        editor.overwrite(specifier.end - POTUZHNO_EXTENSION.length, specifier.end, importExtension);
+      }
+    }
   }
 
   private translateIdentifier(identifier: SourceIdentifier, context: TranslationContext): void {

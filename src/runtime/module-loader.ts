@@ -1,9 +1,8 @@
 import type { LoadHookSync, registerHooks } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
+import { POTUZHNO_EXTENSION } from '../translation/potuzhno-extension.ts';
 import type { Translator } from '../translation/translator.ts';
-
-export const POTUZHNO_EXTENSION = '.potuzhno';
 
 interface ModuleLoaderDependencies {
   readonly translator: Translator;

@@ -1,0 +1,5 @@
+{
+  "bundle": true,
+  "entry": "головна.potuzhno",
+  "outDir": "dist/один-файл"
+}

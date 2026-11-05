@@ -11,6 +11,13 @@ export interface SourceIdentifier {
   readonly isPrivate: boolean;
 }
 
+// Шлях у рядку імпорту: діапазон без лапок.
+export interface SourceImportSpecifier {
+  readonly value: string;
+  readonly start: number;
+  readonly end: number;
+}
+
 interface IdentifierScannerDependencies {
   readonly tokenize: Tokenize;
   readonly memeDictionary: MemeDictionary;
@@ -90,6 +97,46 @@ export class IdentifierScanner {
         isPrivate: token.type === 'PrivateIdentifier',
       };
     }
+  }
+
+  // Рядки-шляхи в `імпорт "x"`, `імпорт … з "x"`, `вивезти … з "x"` і `імпорт("x")`.
+  public *scanImportSpecifiers(source: string): Generator<SourceImportSpecifier> {
+    const tokens = [...this.positionTokens(source)].filter(
+      ({ token }) => !TRIVIA_TOKEN_TYPES.has(token.type),
+    );
+
+    for (let index = 1; index < tokens.length; index += 1) {
+      const { token, start, end } = tokens[index];
+
+      if (token.type === 'StringLiteral' && this.followsImportKeyword(tokens, index)) {
+        yield { value: token.value.slice(1, -1), start: start + 1, end: end - 1 };
+      }
+    }
+  }
+
+  private followsImportKeyword(tokens: readonly PositionedToken[], index: number): boolean {
+    const previousWord = this.findJsWord(tokens[index - 1].token);
+
+    if (previousWord === 'from' || previousWord === 'import') {
+      return true;
+    }
+
+    const isMemberAccess = tokens[index - 3]?.token.value === '.';
+
+    return (
+      tokens[index - 1].token.value === '(' &&
+      this.findJsWord(tokens[index - 2]?.token) === 'import' &&
+      !isMemberAccess
+    );
+  }
+
+  // Мемне слово дає свій JS-відповідник, звичайне ім'я — себе: у файлі може бути й англійський JS.
+  private findJsWord(token: Token | undefined): string | undefined {
+    if (token?.type !== 'IdentifierName') {
+      return undefined;
+    }
+
+    return this.memeDictionary.findJsWord(token.value.normalize('NFC')) ?? token.value;
   }
 
   private *positionTokens(source: string): Generator<PositionedToken> {

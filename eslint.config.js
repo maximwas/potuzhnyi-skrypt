@@ -11,7 +11,7 @@ export default defineConfig([
     'editors/vscode/syntaxes/',
     'editors/vscode/dist/',
     'site/',
-    'dist/',
+    '**/dist/',
   ]),
   js.configs.recommended,
   tseslint.configs.recommended,

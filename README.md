@@ -13,7 +13,7 @@
 Потрібен Node 26.2 або новіший.
 
 ```sh
-npm install -g potuzhno
+npm install -g potuzhnyi-script
 potuzhno файл.potuzhno
 ```
 

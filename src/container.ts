@@ -1,6 +1,7 @@
+import { spawnSync } from 'node:child_process';
 import { globSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { registerHooks, setSourceMapsSupport } from 'node:module';
-import { dirname, sep } from 'node:path';
+import { findPackageJSON, registerHooks, setSourceMapsSupport } from 'node:module';
+import { dirname, join, sep } from 'node:path';
 
 import {
   asClass,
@@ -20,6 +21,7 @@ import { ProjectBuilder } from './build/project-builder.ts';
 import { SourceFileFinder, type PathKind } from './build/source-file-finder.ts';
 import { BuildCommand } from './cli/build-command.ts';
 import { CommandLine, type Logger } from './cli/command-line.ts';
+import { VscodeCommand, type RunProcess } from './cli/vscode-command.ts';
 import { MemeDictionary, type MemeEntry } from './dictionary/meme-dictionary.ts';
 import { MEME_ENTRIES } from './dictionary/meme-entries.ts';
 import { ModuleLoader } from './runtime/module-loader.ts';
@@ -50,6 +52,8 @@ export interface Dependencies {
     directory: string,
     onChange: (changedPath: string) => void,
   ) => Promise<StopWatching>;
+  extensionPath: string;
+  runProcess: RunProcess;
   memeDictionary: MemeDictionary;
   latinTransliterator: LatinTransliterator;
   identifierScanner: IdentifierScanner;
@@ -61,6 +65,7 @@ export interface Dependencies {
   projectBuilder: ProjectBuilder;
   buildWatcher: BuildWatcher;
   buildCommand: BuildCommand;
+  vscodeCommand: VscodeCommand;
   commandLine: CommandLine;
 }
 
@@ -85,6 +90,25 @@ async function watchWithChokidar(
   watcher.on('all', (_event, changedPath) => onChange(changedPath));
 
   return () => watcher.close();
+}
+
+// Готове розширення для VS Code кладе в пакет `npm run build:extension` перед публікацією.
+function findExtensionPath(): string {
+  const packageJsonPath = findPackageJSON('.', import.meta.url);
+  // Без package.json шлях лишається відносним, і команда просто скаже, що файла немає
+  const packageRoot = packageJsonPath === undefined ? '.' : dirname(packageJsonPath);
+
+  return join(packageRoot, 'extension', 'potuzhno-syntax.vsix');
+}
+
+// shortcut: на Windows `code` — це code.cmd, тож іде через оболонку, а шлях із пробілами там не береться в лапки; посилити, коли хтось із Windows напише.
+function runWithInheritedOutput(command: string, args: readonly string[]): number | undefined {
+  const result = spawnSync(command, [...args], {
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+  });
+
+  return result.error === undefined ? (result.status ?? 1) : undefined;
 }
 
 export function createPotuzhnoContainer(): AwilixContainer<Dependencies> {
@@ -114,6 +138,8 @@ export function createPotuzhnoContainer(): AwilixContainer<Dependencies> {
       (await import('esbuild')).build(options),
     ),
     watchDirectory: asValue(watchWithChokidar),
+    extensionPath: asValue(findExtensionPath()),
+    runProcess: asValue(runWithInheritedOutput),
     memeDictionary: asClass(MemeDictionary).singleton(),
     latinTransliterator: asClass(LatinTransliterator).singleton(),
     identifierScanner: asClass(IdentifierScanner).singleton(),
@@ -125,6 +151,7 @@ export function createPotuzhnoContainer(): AwilixContainer<Dependencies> {
     projectBuilder: asClass(ProjectBuilder).singleton(),
     buildWatcher: asClass(BuildWatcher).singleton(),
     buildCommand: asClass(BuildCommand).singleton(),
+    vscodeCommand: asClass(VscodeCommand).singleton(),
     commandLine: asClass(CommandLine).singleton(),
   });
 

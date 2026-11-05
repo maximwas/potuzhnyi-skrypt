@@ -29,7 +29,8 @@
     "format:check": "prettier --check \"{src,bin,test}/**/*.ts\" \"*.js\"",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "prepublishOnly": "npm run check && npm run build"
+    "prepublishOnly": "npm run check && npm run build && npm run build:extension",
+    "build:extension": "mkdir -p extension && npm run package --prefix editors/vscode -- --out ../../extension/potuzhno-syntax.vsix"
   },
   "dependencies": {
     "awilix": "13.0.5",
@@ -51,6 +52,7 @@
   "files": [
     "dist/bin",
     "dist/src",
+    "extension/potuzhno-syntax.vsix",
     "README.md"
   ],
   "keywords": [

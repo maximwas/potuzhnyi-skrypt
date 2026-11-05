@@ -4,7 +4,7 @@
   "description": "Підсвітка синтаксису ПотужнийСкрипт (*.potuzhno): JavaScript з мемними словами",
   "version": "0.1.0",
   "publisher": "maximwas",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "engines": {

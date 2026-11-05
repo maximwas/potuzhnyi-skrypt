@@ -6,7 +6,12 @@ import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { CommandLine, type BuildRunner, type ScriptExecutor } from '../../src/cli/command-line.ts';
+import {
+  CommandLine,
+  type BuildRunner,
+  type ScriptExecutor,
+  type VscodeRunner,
+} from '../../src/cli/command-line.ts';
 import { NameCollisionError } from '../../src/translation/name-collision-error.ts';
 import { PLAIN_OUTPUT_ENVIRONMENT } from '../support/plain-output-environment.ts';
 
@@ -27,10 +32,11 @@ describe('CommandLine', () => {
   function createCommandLine(
     scriptRunner: ScriptExecutor,
     buildCommand: BuildRunner = { run: async () => 0 },
+    vscodeCommand: VscodeRunner = { run: () => 0 },
   ): CommandLine {
     loggedMessages.length = 0;
 
-    return new CommandLine({ scriptRunner, buildCommand, logger });
+    return new CommandLine({ scriptRunner, buildCommand, vscodeCommand, logger });
   }
 
   it('без аргументів друкує підказку й повертає код 1', async () => {
@@ -40,12 +46,35 @@ describe('CommandLine', () => {
     assert.match(loggedMessages[0], /Як запустити/);
   });
 
-  it('підказка згадує і запуск, і збірку', async () => {
+  it('підказка згадує і запуск, і збірку, і розширення', async () => {
     const commandLine = createCommandLine({ run: async () => undefined });
 
     await commandLine.run([]);
 
     assert.match(loggedMessages[0], /potuzhno build/);
+    assert.match(loggedMessages[0], /potuzhno vscode/);
+  });
+
+  it('команду vscode віддає встановленню розширення з її кодом виходу', async () => {
+    const receivedArgs: (readonly string[])[] = [];
+    const commandLine = createCommandLine(
+      {
+        run: async () => {
+          throw new Error('скрипт не мав запускатися');
+        },
+      },
+      { run: async () => 0 },
+      {
+        run: (args) => {
+          receivedArgs.push(args);
+
+          return 3;
+        },
+      },
+    );
+
+    assert.equal(await commandLine.run(['vscode']), 3);
+    assert.deepEqual(receivedArgs, [[]]);
   });
 
   it('команду build віддає збірці з рештою аргументів і її кодом виходу', async () => {

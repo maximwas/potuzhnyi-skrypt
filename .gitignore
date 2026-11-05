@@ -3,3 +3,4 @@ node_modules/
 *.vsix
 editors/vscode/dist/
 dist/
+/extension/

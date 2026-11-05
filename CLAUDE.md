@@ -9,7 +9,8 @@
 ## Випуск в npm
 
 - Пакет `potuzhnyi-script` публікує GitHub Actions (`.github/workflows/npm-publish.yml`) за тегом `vX.Y.Z`, без токенів: npm Trusted Publishing (OIDC). Команда в терміналі після встановлення — `potuzhno`.
-- Порядок: `npm version patch -m "Версія %s"` у `develop` (комміт і тег) → PR у `main` → `git push origin vX.Y.Z`. Workflow перевіряє, що тег збігається з версією в `package.json` і що комміт уже в `main`, потім `npm publish` (`prepublishOnly` ганяє `npm run check` і збірку).
+- Порядок: `npm version patch -m "Версія %s"` у `develop` (комміт і тег) → PR у `main` → `git push origin vX.Y.Z`. Workflow перевіряє, що тег збігається з версією в `package.json` і що комміт уже в `main`, потім `npm publish` (`prepublishOnly` ганяє `npm run check`, збірку й збірку розширення).
+- У пакет іде й розширення для VS Code (команда `potuzhno vscode`): `prepublishOnly` збирає `extension/potuzhno-syntax.vsix` (`npm run build:extension`, каталог не в git). Тому перед `npm publish`, у CI й локально, має стояти `npm ci --prefix editors/vscode`: корінний `tsc` перевіряє й `editors/vscode`, і саме без цього впала перша спроба з GitHub (тег v0.1.1, 2026-11-05).
 - Перший випуск (0.1.0) робить власник вручну: `npm publish` у своєму терміналі (веб-2FA). Після нього, перед наступним випуском, один раз: `npm trust github potuzhnyi-script --file npm-publish.yml --repo maximwas/potuzhnyi-skrypt --allow-publish`. Новий зв'язок діє лише 2 дні до першої успішної публікації, тож виконувати його варто перед самим випуском.
 - Тести дочірніх процесів вимикають кольори (`test/support/plain-output-environment.ts`): `npm publish` у кольоровому терміналі інакше ламає порівняння виводу.
 

@@ -42,5 +42,8 @@ jobs:
 
       - run: npm ci
 
-      # prepublishOnly сам ганяє npm run check і збірку
+      # Корінний tsc перевіряє й editors/vscode, а prepublishOnly збирає з нього .vsix для пакета
+      - run: npm ci --prefix editors/vscode
+
+      # prepublishOnly сам ганяє npm run check, збірку і збірку розширення
       - run: npm publish

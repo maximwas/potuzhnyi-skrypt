@@ -15,12 +15,12 @@ export function GettingStartedSection() {
           Як <span className="bg-blue text-paper inline-block rotate-2 px-3 py-1">почати</span>
         </h2>
         <p className="text-ink mt-6 max-w-2xl text-lg">
-          Пакет уже в npm. Розширення для VS Code поки що не в Marketplace, його збирають вручну з{' '}
+          Пакет уже в npm, і розширення для VS Code лежить у ньому ж. Код відкритий,{' '}
           <a
             href="https://github.com/maximwas/potuzhnyi-skrypt"
             className="hover:bg-yellow font-bold underline decoration-2 underline-offset-4"
           >
-            репозиторію на GitHub
+            репозиторій на GitHub
           </a>
           .
         </p>
@@ -52,18 +52,11 @@ export function GettingStartedSection() {
 
           <StepCard number="03" title="Розширення для VS Code" tiltClassName="-rotate-2">
             <p>
-              Склонуйте репозиторій, виконайте <span className={codeInline}>npm ci</span> у його
-              корені, потім зберіть і встановіть розширення:
+              Розширення лежить у тому самому пакеті. Потрібна команда{' '}
+              <span className={codeInline}>code</span> у PATH (у VS Code: «Shell Command: Install
+              &apos;code&apos; command in PATH»). Після встановлення пакета виконайте:
             </p>
-            <CodeBlock
-              label="термінал"
-              lines={[
-                'cd editors/vscode',
-                'npm ci',
-                'npm run package',
-                'code --install-extension potuzhno-syntax-0.1.0.vsix',
-              ]}
-            />
+            <CodeBlock label="термінал" lines={['potuzhno vscode']} />
             <ul className="list-disc space-y-1 pl-5">
               <li>підсвітка мемних слів у файлах .potuzhno;</li>
               <li>зелена іконка «Зе» для таких файлів у провіднику;</li>

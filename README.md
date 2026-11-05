@@ -139,6 +139,15 @@ CommandLine → ScriptRunner → ModuleLoader → Translator → IdentifierScann
 
 ## Підсвітка у VS Code
 
+Розширення лежить у тому самому npm-пакеті. Потрібна команда `code` у PATH (у VS Code: «Shell Command: Install 'code' command in PATH»):
+
+```sh
+npm install -g potuzhnyi-script
+potuzhno vscode
+```
+
+З репозиторію розширення збирають так:
+
 ```sh
 cd editors/vscode
 npm install

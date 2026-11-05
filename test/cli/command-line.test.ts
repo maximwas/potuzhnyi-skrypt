@@ -8,12 +8,16 @@ import { fileURLToPath } from 'node:url';
 
 import { CommandLine, type BuildRunner, type ScriptExecutor } from '../../src/cli/command-line.ts';
 import { NameCollisionError } from '../../src/translation/name-collision-error.ts';
+import { PLAIN_OUTPUT_ENVIRONMENT } from '../support/plain-output-environment.ts';
 
 const BIN_PATH = fileURLToPath(new URL('../../bin/potuzhno.ts', import.meta.url));
 const EXAMPLE_PATH = fileURLToPath(new URL('../../examples/бюджет.potuzhno', import.meta.url));
 
 function runCli(scriptPath: string) {
-  return spawnSync(process.execPath, [BIN_PATH, scriptPath], { encoding: 'utf8' });
+  return spawnSync(process.execPath, [BIN_PATH, scriptPath], {
+    encoding: 'utf8',
+    env: PLAIN_OUTPUT_ENVIRONMENT,
+  });
 }
 
 describe('CommandLine', () => {
@@ -165,7 +169,10 @@ describe('potuzhno (CLI)', () => {
   });
 
   it('без аргументів друкує підказку', () => {
-    const { status, stderr } = spawnSync(process.execPath, [BIN_PATH], { encoding: 'utf8' });
+    const { status, stderr } = spawnSync(process.execPath, [BIN_PATH], {
+      encoding: 'utf8',
+      env: PLAIN_OUTPUT_ENVIRONMENT,
+    });
 
     assert.equal(status, 1);
     assert.match(stderr, /Як запустити/);

@@ -3,6 +3,8 @@ import { spawnSync } from 'node:child_process';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { PLAIN_OUTPUT_ENVIRONMENT } from '../support/plain-output-environment.ts';
+
 const BIN_PATH = fileURLToPath(new URL('../../bin/potuzhno.ts', import.meta.url));
 const EXAMPLES_PATH = fileURLToPath(new URL('../../examples/', import.meta.url));
 
@@ -62,6 +64,7 @@ describe('examples/', () => {
     it(`${file} виводить очікуване й завершується з кодом 0`, () => {
       const result = spawnSync(process.execPath, [BIN_PATH, EXAMPLES_PATH + file], {
         encoding: 'utf8',
+        env: PLAIN_OUTPUT_ENVIRONMENT,
       });
 
       assert.deepEqual(splitLines(result.stderr), errorOutput);

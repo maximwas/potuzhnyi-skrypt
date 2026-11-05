@@ -19,6 +19,7 @@ import { asValue } from 'awilix';
 
 import { CONFIG_FILE_NAME } from '../../src/build/build-config-loader.ts';
 import { createPotuzhnoContainer } from '../../src/container.ts';
+import { PLAIN_OUTPUT_ENVIRONMENT } from '../support/plain-output-environment.ts';
 
 const BIN_PATH = fileURLToPath(new URL('../../bin/potuzhno.ts', import.meta.url));
 const SHOP_PATH = fileURLToPath(new URL('../../examples/магазин', import.meta.url));
@@ -59,7 +60,10 @@ async function runBuild(projectDir: string, extraArgs: string[] = []): Promise<B
 }
 
 function runNode(scriptPath: string): { stdout: string[]; stderr: string[] } {
-  const { stdout, stderr } = spawnSync(process.execPath, [scriptPath], { encoding: 'utf8' });
+  const { stdout, stderr } = spawnSync(process.execPath, [scriptPath], {
+    encoding: 'utf8',
+    env: PLAIN_OUTPUT_ENVIRONMENT,
+  });
 
   return {
     stdout: stdout.trimEnd().split('\n').filter(Boolean),
@@ -273,6 +277,7 @@ describe('potuzhno build -w', () => {
 
     const child = spawn(process.execPath, [BIN_PATH, 'build', '-w', '-p', watchDirectory], {
       stdio: ['ignore', 'pipe', 'pipe'],
+      env: PLAIN_OUTPUT_ENVIRONMENT,
     });
     let output = '';
 
